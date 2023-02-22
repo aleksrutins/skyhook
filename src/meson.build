@@ -1,12 +1,16 @@
 skyhook_sources = [
   'main.vala',
   'application.vala',
-  'window.vala',
+  'window.vala'
 ]
+
+subdir('lib')
 
 skyhook_deps = [
   dependency('gtk4'),
   dependency('libadwaita-1'),
+  dependency('json-glib-1.0'),
+  dependency('libsoup-3.0')
 ]
 
 skyhook_sources += gnome.compile_resources('skyhook-resources',
