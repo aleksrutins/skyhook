@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=Skyhook
-Exec=skyhook
-Icon=com.rutins.Skyhook
-Terminal=false
-Type=Application
-Categories=GTK;
-StartupNotify=true
