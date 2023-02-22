@@ -1,1 +1,1 @@
-skyhook_sources += files('gql.vala', 'auth.vala')
+skyhook_sources += files('gql.vala')

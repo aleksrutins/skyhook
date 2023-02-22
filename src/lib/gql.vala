@@ -1,4 +1,4 @@
-namespace Skyhook.GQL {
+namespace Skyhook.Util.GQL {
     errordomain AuthError {
         failed,
         no_token
@@ -23,15 +23,24 @@ namespace Skyhook.GQL {
             return Json.gobject_from_data(typeof(Result), (string) result.get_data(), result.length);
         }
 
-        async Result run_anonymous<Result>(string query) throws Error {
+        public void set_token(string token) {
+            this.token = token;
+        }
+
+        public async Result run_anonymous<Result>(string query) throws Error {
             return yield run_message(create_message(query));
         }
 
-        async Result run_with_auth<Result>(string query) throws AuthError, Error {
+        public async Result run_with_auth<Result>(string query) throws AuthError, Error {
             if(token == null) throw new AuthError.no_token("No token provided");
             var msg = create_message(query);
             msg.request_headers.append("Authorization", @"Bearer $token");
             return yield run_message(msg);
+        }
+
+        public async Result run<Result>(string query) throws AuthError, Error {
+            if(token == null) return yield run_anonymous<Result>(query);
+            else return yield run_with_auth<Result>(query);
         }
     }
 }
