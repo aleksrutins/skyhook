@@ -23,6 +23,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+using Skyhook.Util.GQL.Types;
+
 namespace Skyhook {
     [GtkTemplate (ui = "/com/rutins/Skyhook/window.ui")]
     public class Window : Adw.ApplicationWindow {
@@ -32,11 +34,33 @@ namespace Skyhook {
         [GtkChild]
         private unowned Adw.ViewStack content_stack;
 
+        private async void login(string token) {
+            var app = (Application)application;
+            var client = app.gql_client;
+            client.set_token (token);
+
+            content_stack.visible_child_name = "loading-spinner";
+            var user = yield client.run("""
+            query {
+                me {
+                  id
+                  name
+                  email
+                }
+              }
+            """);
+            user_icon.show_initials = true;
+            user_icon.text = user.get_object().get_object_member("me").get_string_member("name");
+        }
+
         public Window (Gtk.Application app) {
             Object (application: app);
             content_stack.add_named ((Gtk.Widget)Object.new(typeof(Gtk.Spinner), spinning: true, vexpand: true, halign: Gtk.Align.CENTER, valign: Gtk.Align.CENTER), "loading-spinner");
             content_stack.add_named (new WelcomePage (), "welcome");
-            content_stack.add_named (new LoginPage(), "login");
+            
+            var login_page = new LoginPage();
+            login_page.login.connect(login);
+            content_stack.add_named (login_page, "login");
             content_stack.visible_child_name = "loading-spinner";
             load_projects.begin();
         }
@@ -45,6 +69,8 @@ namespace Skyhook {
             var app = (Application)application;
             if(!app.gql_client.has_token()) {
                 content_stack.visible_child_name = "login";
+            } else {
+                
             }
         }
     }

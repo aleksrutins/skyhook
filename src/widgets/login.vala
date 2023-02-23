@@ -1,8 +1,11 @@
 using Gtk;
+using Skyhook.Util.GQL.Types;
 
 namespace Skyhook {
     public class LoginPage : Widget {
         private Entry token_entry;
+
+        public signal void login(string token);
 
         public string token {
             get {
@@ -15,7 +18,7 @@ namespace Skyhook {
         }
 
         private void login_clicked() {
-
+            login(token_entry.text);
         }
 
         public LoginPage() {
