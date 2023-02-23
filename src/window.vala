@@ -40,17 +40,28 @@ namespace Skyhook {
             client.set_token (token);
 
             content_stack.visible_child_name = "loading-spinner";
-            var user = yield client.run("""
-            query {
+            var data = yield client.run("""
+              query {
                 me {
                   id
                   name
                   email
                 }
+                projects {
+                  edges {
+                    node {
+                      name
+                      id
+                    }
+                  }
+                }
               }
             """);
             user_icon.show_initials = true;
-            user_icon.text = user.get_object().get_object_member("me").get_string_member("name");
+            user_icon.text = data.get_object().get_object_member("me").get_string_member("name");
+
+            content_stack.add_named(new ProjectsPage(data.get_object().get_object_member("projects").get_array_member("edges")), "projects-view");
+            content_stack.visible_child_name = "projects-view";
         }
 
         public Window (Gtk.Application app) {
