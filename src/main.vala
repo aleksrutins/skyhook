@@ -25,5 +25,6 @@
 
 int main (string[] args) {
     var app = new Skyhook.Application ();
+    GLib.Application.set_default (app);
     return app.run (args);
 }

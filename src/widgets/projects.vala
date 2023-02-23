@@ -2,21 +2,20 @@ using Gtk;
 
 namespace Skyhook {
     public class ProjectsPage : Widget {
-        class Preview : Widget {
+        class Preview : Button {
             static construct {
-                set_layout_manager_type (typeof(Gtk.BoxLayout));
+                set_layout_manager_type (typeof(Gtk.BinLayout));
             }
 
             string id;
 
             public Preview(Json.Object data) {
-                var box = new Box(VERTICAL, 12) {
-                    css_classes = {"card"}
-                };
+                css_classes = {"card", "activatable"};
+                var box = new Box(VERTICAL, 12);
 
                 id = data.get_string_member ("id");
-                box.append(new Label(data.get_string_member ("name")));
-                box.append(new Label(id) {css_classes = {"caption"}, margin_start = 10, margin_end = 10});
+                box.append(new Label(data.get_string_member ("name")) {css_classes = {"title-2"}, margin_top = 10});
+                box.append(new Label(id) {css_classes = {"caption"}, margin_start = 10, margin_end = 10, margin_bottom = 10});
                 box.set_parent (this);
             }
         }
@@ -31,7 +30,12 @@ namespace Skyhook {
             content_box.hexpand = true;
             projects.foreach_element ((arr, index, project) => {
                 var data = project.get_object ().get_object_member ("node");
-                content_box.append (new Preview(data));
+                var preview = new Preview(data);
+                preview.clicked.connect (() => {
+                    (new ProjectWindow(data.get_string_member ("id"), data.get_string_member ("name"))).show ();
+                });
+
+                content_box.append (preview);
             });
         }
     }
