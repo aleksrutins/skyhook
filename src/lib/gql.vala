@@ -10,6 +10,14 @@ namespace Skyhook.Util.GQL {
 
         public Client() {
             session = new Soup.Session();
+            var token_file = File.new_for_path(Environment.get_home_dir() + "/.skyhook-token");
+            if(token_file.query_exists()) {
+                try {
+                    token = (string)token_file.read().read_bytes(37, null).get_data();
+                    token.data[38] = 0;
+                    token = token.strip();
+                } catch(Error e) {}
+            }
         }
 
         private Soup.Message create_message(string query) {
@@ -28,6 +36,11 @@ namespace Skyhook.Util.GQL {
 
         public void set_token(string token) {
             this.token = token;
+            var token_file = File.new_for_path(Environment.get_home_dir() + "/.skyhook-token");
+            try {
+                size_t size;
+                token_file.create(FileCreateFlags.REPLACE_DESTINATION, null).write_all(token.data, out size, null);
+            } catch(Error e) {}
         }
 
         public bool has_token() {

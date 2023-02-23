@@ -38,7 +38,12 @@ namespace Skyhook {
             var app = (Application)application;
             var client = app.gql_client;
             client.set_token (token);
+            yield actually_login();
+        }
 
+        private async void actually_login() {
+            var app = (Application)application;
+            var client = app.gql_client;
             content_stack.visible_child_name = "loading-spinner";
             var data = yield client.run("""
               query {
@@ -81,7 +86,7 @@ namespace Skyhook {
             if(!app.gql_client.has_token()) {
                 content_stack.visible_child_name = "login";
             } else {
-                
+                yield actually_login();
             }
         }
     }
