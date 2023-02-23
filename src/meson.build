@@ -5,6 +5,7 @@ skyhook_sources = [
 ]
 
 subdir('lib')
+subdir('widgets')
 
 skyhook_deps = [
   dependency('gtk4'),

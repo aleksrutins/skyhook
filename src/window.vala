@@ -27,10 +27,16 @@ namespace Skyhook {
     [GtkTemplate (ui = "/com/rutins/Skyhook/window.ui")]
     public class Window : Adw.ApplicationWindow {
         [GtkChild]
-        private unowned Gtk.Label label;
+        private unowned Adw.Avatar user_icon;
+
+        [GtkChild]
+        private unowned Adw.ViewStack content_stack;
 
         public Window (Gtk.Application app) {
             Object (application: app);
+            content_stack.add_named ((Gtk.Widget)Object.new(typeof(Gtk.Spinner), spinning: true, vexpand: true, halign: Gtk.Align.CENTER, valign: Gtk.Align.CENTER), "loading-spinner");
+            content_stack.add_named (new WelcomePage (), "welcome");
+            content_stack.set_visible_child_name ("loading-spinner");
         }
     }
 }

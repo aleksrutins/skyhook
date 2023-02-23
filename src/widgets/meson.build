@@ -1,0 +1,1 @@
+skyhook_sources += files('welcome.vala')
