@@ -3,7 +3,7 @@ using Skyhook.Util.GQL.Types;
 
 namespace Skyhook {
     public class LoginPage : Widget {
-        private Entry token_entry;
+        private PasswordEntry token_entry;
 
         public signal void login(string token);
 
@@ -37,7 +37,7 @@ namespace Skyhook {
                 css_classes = { "vertical", "linked" },
             });
             {
-                token_entry = new Entry () {
+                token_entry = new PasswordEntry () {
                     width_request = 100,
                     placeholder_text = "API Token",
                 };
