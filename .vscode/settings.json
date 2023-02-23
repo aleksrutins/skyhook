@@ -6,5 +6,6 @@
         "**/.hg/store/**": true,
         ".flatpak/**": true,
         "_build/**": true
-    }
+    },
+    "vala.languageServerPath": "/home/aleks/Projects/skyhook/.flatpak/vala-language-server.sh"
 }
