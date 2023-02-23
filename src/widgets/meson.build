@@ -1,1 +1,1 @@
-skyhook_sources += files('welcome.vala')
+skyhook_sources += files('welcome.vala', 'projects.vala', 'login.vala')

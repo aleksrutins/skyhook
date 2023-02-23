@@ -1,9 +1,9 @@
 namespace Skyhook.Util.GQL {
-    errordomain AuthError {
+    public errordomain AuthError {
         failed,
         no_token
     }
-    class Client {
+    public class Client {
         private Soup.Session session;
         private string? token;
         private const string API_URL = "https://backboard.railway.app/graphql/v2";
@@ -25,6 +25,10 @@ namespace Skyhook.Util.GQL {
 
         public void set_token(string token) {
             this.token = token;
+        }
+
+        public bool has_token() {
+            return this.token != null;
         }
 
         public async Result run_anonymous<Result>(string query) throws Error {

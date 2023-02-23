@@ -25,8 +25,12 @@
 
 namespace Skyhook {
     public class Application : Adw.Application {
+        public Util.GQL.Client gql_client;
+
         public Application () {
             Object (application_id: "com.rutins.Skyhook", flags: ApplicationFlags.FLAGS_NONE);
+
+            gql_client = new Util.GQL.Client ();
         }
 
         construct {

@@ -36,7 +36,16 @@ namespace Skyhook {
             Object (application: app);
             content_stack.add_named ((Gtk.Widget)Object.new(typeof(Gtk.Spinner), spinning: true, vexpand: true, halign: Gtk.Align.CENTER, valign: Gtk.Align.CENTER), "loading-spinner");
             content_stack.add_named (new WelcomePage (), "welcome");
-            content_stack.set_visible_child_name ("loading-spinner");
+            content_stack.add_named (new LoginPage(), "login");
+            content_stack.visible_child_name = "loading-spinner";
+            load_projects.begin();
+        }
+
+        private async void load_projects() {
+            var app = (Application)application;
+            if(!app.gql_client.has_token()) {
+                content_stack.visible_child_name = "login";
+            }
         }
     }
 }

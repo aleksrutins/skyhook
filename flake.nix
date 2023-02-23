@@ -16,8 +16,8 @@
         };
         devShells = flake-utils.lib.flattenTree {
           default = pkgs.mkShell {
+            packages = [ packages.skyhook ];
             buildInputs = with pkgs; [
-              packages.default
               gcc
               pkg-config
               meson
