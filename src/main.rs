@@ -18,17 +18,91 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-mod application;
 mod config;
-mod window;
-
-use self::application::SkyhookApplication;
-use self::window::SkyhookWindow;
 
 use config::{GETTEXT_PACKAGE, LOCALEDIR, PKGDATADIR};
 use gettextrs::{bind_textdomain_codeset, bindtextdomain, textdomain};
 use gtk::gio;
 use gtk::prelude::*;
+use relm4::{adw, SimpleComponent, ComponentSender, ComponentParts, RelmApp, RelmWidgetExt};
+
+#[derive(Debug)]
+enum AppMsg {
+    Increment,
+    Decrement,
+}
+
+struct AppModel {
+    counter: u8,
+}
+
+#[relm4::component]
+impl SimpleComponent for AppModel {
+    type Init = u8;
+
+    type Input = AppMsg;
+    type Output = ();
+
+    view! {
+        adw::Window {
+            set_title: Some("Skyhook"),
+            set_default_width: 300,
+            set_default_height: 100,
+
+            gtk::Box {
+                set_orientation: gtk::Orientation::Vertical,
+                set_spacing: 5,
+                adw::HeaderBar {
+
+                },
+
+                gtk::Button {
+                    set_label: "Increment",
+                    connect_clicked[sender] => move |_| {
+                        sender.input(AppMsg::Increment);
+                    }
+                },
+
+                gtk::Button::with_label("Decrement") {
+                    connect_clicked[sender] => move |_| {
+                        sender.input(AppMsg::Decrement);
+                    }
+                },
+
+                gtk::Label {
+                    #[watch]
+                    set_label: &format!("Counter: {}", model.counter),
+                    set_margin_all: 5,
+                }
+            }
+        }
+    }
+
+    // Initialize the UI.
+    fn init(
+        counter: Self::Init,
+        root: &Self::Root,
+        sender: ComponentSender<Self>,
+    ) -> ComponentParts<Self> {
+        let model = AppModel { counter };
+
+        // Insert the macro code generation here
+        let widgets = view_output!();
+
+        ComponentParts { model, widgets }
+    }
+
+    fn update(&mut self, msg: Self::Input, _sender: ComponentSender<Self>) {
+        match msg {
+            AppMsg::Increment => {
+                self.counter = self.counter.wrapping_add(1);
+            }
+            AppMsg::Decrement => {
+                self.counter = self.counter.wrapping_sub(1);
+            }
+        }
+    }
+}
 
 fn main() {
     // Set up gettext translations
@@ -45,11 +119,6 @@ fn main() {
     // Create a new GtkApplication. The application manages our main loop,
     // application windows, integration with the window manager/compositor, and
     // desktop features such as file opening and single-instance applications.
-    let app = SkyhookApplication::new("com.rutins.Skyhook", &gio::ApplicationFlags::empty());
-
-    // Run the application. This function will block until the application
-    // exits. Upon return, we have our exit code to return to the shell. (This
-    // is the code you see when you do `echo $?` after running a command in a
-    // terminal.
-    std::process::exit(app.run());
+    let app = RelmApp::new("com.rutins.Skyhook");
+    app.run::<AppModel>(0);
 }
