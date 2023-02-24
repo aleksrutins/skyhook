@@ -1,6 +1,4 @@
 data/com.rutins.Skyhook.desktop.in
 data/com.rutins.Skyhook.appdata.xml.in
 data/com.rutins.Skyhook.gschema.xml
-src/main.vala
-src/window.vala
 src/window.ui

@@ -1,1 +1,0 @@
-skyhook_sources += files('welcome.vala', 'projects.vala', 'login.vala', 'project-window.vala')

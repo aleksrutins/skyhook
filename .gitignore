@@ -1,3 +1,1 @@
-.direnv/
-.flatpak/
-result
+target/

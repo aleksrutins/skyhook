@@ -4,7 +4,7 @@
     "runtime-version" : "43",
     "sdk" : "org.gnome.Sdk",
     "sdk-extensions" : [
-        "org.freedesktop.Sdk.Extension.vala"
+        "org.freedesktop.Sdk.Extension.rust-stable"
     ],
     "command" : "skyhook",
     "finish-args" : [
@@ -15,8 +15,14 @@
         "--socket=wayland"
     ],
     "build-options" : {
-        "append-path" : "/usr/lib/sdk/vala/bin",
-        "prepend-ld-library-path" : "/usr/lib/sdk/vala/lib"
+        "append-path" : "/usr/lib/sdk/rust-stable/bin",
+        "build-args" : [
+            "--share=network"
+        ],
+        "env" : {
+            "RUST_BACKTRACE" : "1",
+            "RUST_LOG" : "skyhook=debug"
+        }
     },
     "cleanup" : [
         "/include",
@@ -26,7 +32,6 @@
         "/share/gtk-doc",
         "/share/man",
         "/share/pkgconfig",
-        "/share/vala",
         "*.la",
         "*.a"
     ],
@@ -38,7 +43,7 @@
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "file:///var/home/aleks/Projects"
+                    "url" : "file:///home/aleks/Projects"
                 }
             ]
         }
