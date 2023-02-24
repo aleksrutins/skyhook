@@ -24,7 +24,7 @@ use config::{GETTEXT_PACKAGE, LOCALEDIR, PKGDATADIR};
 use gettextrs::{bind_textdomain_codeset, bindtextdomain, textdomain};
 use gtk::gio;
 use gtk::prelude::*;
-use relm4::{adw, SimpleComponent, ComponentSender, ComponentParts, RelmApp, RelmWidgetExt};
+use relm4::prelude::*;
 
 #[derive(Debug)]
 enum AppMsg {
@@ -44,7 +44,7 @@ impl SimpleComponent for AppModel {
     type Output = ();
 
     view! {
-        adw::Window {
+        adw::ApplicationWindow {
             set_title: Some("Skyhook"),
             set_default_width: 300,
             set_default_height: 100,
@@ -53,26 +53,16 @@ impl SimpleComponent for AppModel {
                 set_orientation: gtk::Orientation::Vertical,
                 set_spacing: 5,
                 adw::HeaderBar {
-
-                },
-
-                gtk::Button {
-                    set_label: "Increment",
-                    connect_clicked[sender] => move |_| {
-                        sender.input(AppMsg::Increment);
+                    pack_end = &gtk::MenuButton {
+                        set_css_classes: &["flat"],
+                        set_icon_name: "open-menu-symbolic"
+                        //set_child = &adw::Avatar {}
                     }
                 },
 
-                gtk::Button::with_label("Decrement") {
-                    connect_clicked[sender] => move |_| {
-                        sender.input(AppMsg::Decrement);
-                    }
-                },
+                #[name = "content_view"]
+                adw::ViewStack {
 
-                gtk::Label {
-                    #[watch]
-                    set_label: &format!("Counter: {}", model.counter),
-                    set_margin_all: 5,
                 }
             }
         }
