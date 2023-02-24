@@ -1,24 +1,20 @@
 using Gtk;
 
 namespace Skyhook {
+    [GtkTemplate(ui = "/com/rutins/Skyhook/project-window.ui")]
     public class ProjectWindow : Adw.Window {
         private string id;
-        private string name;
-        private Box box;
-        private Spinner spinner;
+
+        public string project_name {get; set;}
+
+        [GtkChild]
+        private Adw.ViewStack view_stack;
+
         public ProjectWindow(string id, string name) {
             Object(title: name);
             this.id = id;
-            this.name = name;
-            
-            box = new Gtk.Box(VERTICAL, 6);
-            box.append (new Adw.HeaderBar ());
-            spinner = new Spinner();
-            spinner.spinning = true;
-            spinner.vexpand = true;
-            spinner.hexpand = true;
-            box.append(spinner);
-            content = box;
+            this.project_name = name;
+            view_stack.visible_child_name = "loading";
             load_data.begin();
         }
 
@@ -33,10 +29,7 @@ namespace Skyhook {
             }
             """);
 
-            spinner.unparent();
-
-            box.append(new Label(result.get_object().get_object_member("project").get_string_member("name")) { css_classes = {"title-1"}, margin_top = 10, margin_bottom = 10 });
-            box.append(new Label(result.get_object().get_object_member("project").get_string_member("description")));
+            view_stack.visible_child_name = "content";
         }
     }
 }
